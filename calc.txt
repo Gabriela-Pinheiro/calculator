@@ -1,0 +1,36 @@
+VARIABLES:
+
+- display number
+- current number 
+- next number 
+- operator
+
+FUNCTIONS:
+
+- add()
+- subtract()
+- multiplay()
+- divide()
+	make control user don't divide by 0
+
+- operate() "=" button
+	takes an operator and two number and then calls one of the operations. 
+	control expression is write correct before operate, else return
+	use parseFloat(var) on next number
+
+- roundToDecimal(number)
+	round the parameter number to two(?) decimals
+
+- clear()
+	clear display var
+
+- "." button to input decimals, make sure only one for each number.
+
+- "backspace" button to undo
+
+- keyboard support
+
+
+
+
+
