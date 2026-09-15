@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculator</title>
+    <script src="script.js" defer></script>
 </head>
 <body>
     <header>
@@ -20,9 +21,9 @@
                 <option value="multiply">Multiply</option>
                 <option value="divide">Divide</option>
             </select>
-            <button type="submit">Calculate</button>
+            <button type="submit" id="calculate-btn" onclick="calculate()">Calculate</button>
         </form>
-        <div id="result"></div>
+        <div id="result">Result: </div>
     </main>
 
     <footer>
