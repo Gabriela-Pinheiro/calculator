@@ -1,36 +1,92 @@
 let result;
-console.log('result1: ' + result);
+const inputField = document.getElementById('currentNumber');
+let otherValue = 0;
 
-// console.log('num1: ' + num1);
-// console.log('num2: ' + num2);
-// console.log('operation: ' + operation);
+let rightNumber = 0;
+let leftNumber = 0;
+
+function updateNumber(number) {
+    populate(number);
+    const operation = getOperationFromInputField();
+    
+    if(operation !== undefined && operation !== '-') {
+        const parts = inputField.value.split(operation);
+        rightNumber = parseFloat(parts[1]);
+        leftNumber = parseFloat(parts[0]);
+        console.log('rightNumber: ' + rightNumber);
+        console.log('leftNumber: ' + leftNumber);
+    }
+}
+
+function populate(toPopulate) {
+    // console.log('populate ' + toPopulate);
+    // if(inputField.value !== null) {
+        inputField.value += toPopulate;
+        console.log('new ' + inputField);
+        return inputField;
+    // }
+    // inputField.value = toPopulate;
+}
+
+function getOperationFromInputField() {
+    let operationIndex = inputField.value.indexOf('+');
+    if (operationIndex > -1) {
+        return '+';
+    }
+    
+    operationIndex = inputField.value.indexOf('*');
+    if (operationIndex > -1) {
+        return '*';
+    }
+    
+    operationIndex = inputField.value.indexOf('/');
+    if (operationIndex > -1) {
+        return '/';
+    }
+    
+    operationIndex = inputField.value.indexOf('-');
+    if (operationIndex > -1) {
+        return '-';
+    }
+    
+    return undefined;
+}
+
+function operate(operator) {
+    if(getOperationFromInputField() !== undefined) {
+        // calculate();
+    } 
+    populate(operator);
+}
 
 function calculate() {
-    // Get the input values
-    const num1 = parseFloat(document.getElementById('num1').value);
-    const num2 = parseFloat(document.getElementById('num2').value);
-    const operation = document.getElementById('operation').value;
-    console.log('num1: ' + num1);
-    console.log('num2: ' + num2);
-    console.log('operation: ' + operation);
-    
-    console.log(num1, num2, operation);
+
+    if(inputField.value !== '') {
+        const operation = getOperationFromInputField();
+        if (operation === undefined) {
+            return
+        }
+
+        const parts = inputField.value.split(operation);
+        const num1 = parseFloat(parts[0]);
+        const num2 = parseFloat(parts[1]);
+        let result;
 
     // Perform the calculation based on the selected operation
     switch (operation) {
-        case 'add':
+        case '+':
             result = num1 + num2
             alert(result);
             break;
-        case 'subtract':
+        case '-':
             result = num1 - num2;
             alert(result);
             break;
-        case 'multiply':
+        case '*':
             result = num1 * num2;
             alert(result);
             break;
-        case 'divide':
+        case '/':
             if (num2 !== 0) {
                 result = num1 / num2;
                 alert(result);
@@ -44,12 +100,18 @@ function calculate() {
             return;
     }
 
+    inputField.value = '';
+    populate(result);
+
+}
+
     //calculate the result
-    document.getElementById('calculate-btn')
-        .onclick = () => {
-            calculate();
-    };
-    // Display the result
-        document.getElementById('result')
-            .innerText =`nnnnnnnnnnnnnnnnnnnn ${result}`;
-    console.log('result3: ' + result);}
+    // document.getElementByClass('number-btn')
+    //     .onclick = () => {
+    //         populate();
+    // };
+    // // Display the result
+    //     document.getElementById('result')
+    //         .innerText =`nnnnnnnnnnnnnnnnnnnn ${result}`;
+    // console.log('result3: ' + result);
+    }

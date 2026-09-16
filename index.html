@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculator</title>
     <script src="script.js" defer></script>
+    <link rel="icon" type="image/svg" href="logo2.svg">
 </head>
 <body>
     <header>
@@ -12,17 +13,24 @@
     </header>
     
     <main>
-        <form id="calculator-form">
-            <input type="number" id="num1" placeholder="Enter first number" required>
-            <input type="number" id="num2" placeholder="Enter second number" required>
-            <select id="operation">
-                <option value="add">Add</option>
-                <option value="subtract">Subtract</option>
-                <option value="multiply">Multiply</option>
-                <option value="divide">Divide</option>
-            </select>
-            <button type="submit" id="calculate-btn" onclick="calculate()">Calculate</button>
-        </form>
+        <input type="text" id="currentNumber" name="currentNumber" required>
+
+        <button type="submit" class="number-btn" onclick="updateNumber(1)">1</button>
+        <button type="submit" class="number-btn" onclick="updateNumber(2)">2</button>
+        <button type="submit" class="number-btn" onclick="updateNumber(3)">3</button>
+        <button type="submit" class="number-btn" onclick="updateNumber(4)">4</button>
+        <button type="submit" class="number-btn" onclick="updateNumber(5)">5</button>
+        <button type="submit" class="number-btn" onclick="updateNumber(6)">6</button>
+        <button type="submit" class="number-btn" onclick="updateNumber(7)">7</button>
+        <button type="submit" class="number-btn" onclick="updateNumber(8)">8</button>
+        <button type="submit" class="number-btn" onclick="updateNumber(9)">9</button>
+        <button type="submit" class="number-btn" onclick="updateNumber(0)">0</button>
+        <button type="submit" id="operation-btn" onclick="operate('+')">+</button>
+        <button type="submit" id="operation-btn" onclick="operate('-')">-</button>
+        <button type="submit" id="operation-btn" onclick="operate('*')">*</button>
+        <button type="submit" id="operation-btn" onclick="operate('/')">/</button>
+        <button type="submit" id="calculation-btn" onclick="calculate()">=</button>
+        
         <div id="result">Result: </div>
     </main>
 
