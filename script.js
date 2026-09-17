@@ -6,37 +6,17 @@ let otherValue = 0;
 let rightNumber = 0;
 let leftNumber = 0;
 
-function isDecimal(input) {
-    countCharInString(input, '.');
-    return input.includes('.');
-}
 
 function disableDot() {
     document.getElementById('decimal-dot').disabled = true;
     populate('.');
 }
 
-function updateNumber(number) {
-    populate(number);
-
-    const operation = getOperationFromInputField();
-    
-    if(operation !== undefined && operation !== '-') {
-        const parts = inputField.value.split(operation);
-        rightNumber = parseFloat(parts[1]);
-        leftNumber = parseFloat(parts[0]);
-    }
-}
-
 function populate(toPopulate) {
-    if(countCharInString(inputField.value, '.')>2) {
-        return
-    }
+    inputField.value += toPopulate;
+    // console.log(inputField.value);
+    return inputField;
 
-    if(inputField.value !== null) {
-        inputField.value += toPopulate;
-        return inputField;
-    }
 }
 
 function getOperationFromInputField() {
@@ -52,8 +32,10 @@ function getOperationFromInputField() {
     if (operationIndex > -1) {
         return '/';
     }
-    operationIndex = inputField.value.indexOf('-');
-    if (operationIndex > -1) {
+    //handle if is negativa and has 2 numbers
+    const findOperation = inputField.value.substring(1);
+    operationIndex = findOperation.indexOf('-');
+    if (operationIndex > -1 && operationIndex !== findOperation.length-1) {
         return '-';
     }
     return undefined;
@@ -82,18 +64,19 @@ function getIndexOfNegative() {
     }
     if(count === 3) {
         return inputField.value.lastIndexOf('-')-1;
-    } if (count === 2) {
+    } 
+    if (count === 2) {
         if(inputField.value.startsWith('-')) {
             return inputField.value.lastIndexOf('-')
         }
         return inputField.value.indexOf('-');
     }
-
     return undefined;
 }
 
 function clearCalculation() {
     inputField.value = '';
+    document.getElementById('decimal-dot').disabled = false;
 }
 
 function deleteLast() {
@@ -121,17 +104,17 @@ function calculate() {
         // Perform the calculation based on the selected operation
         switch (operation) {
             case '+':
-                result = (num1 + num2).toFixed(2);
+                result = num1 + num2;
                 break;
             case '-':
-                result = (num1 - num2).toFixed(2)
+                result = num1 - num2;
                 break;
             case '*':
-                result = (num1 * num2).toFixed(2);
+                result = num1 * num2;
                 break;
             case '/':
                 if (num2 !== 0) {
-                    result = (num1 / num2).toFixed(2);
+                    result = num1 / num2;
                     result;
                 } else {
                     alert("Error: Division by zero is not allowed.");
@@ -143,7 +126,13 @@ function calculate() {
                 alert("Error: Invalid operation.");
                 return;
         }
+
         inputField.value = '';
+
+        if(!Number.isInteger(result)){
+            result = result.toFixed(2);
+        }
+
         populate(result);
     }
 }
