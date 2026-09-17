@@ -6,8 +6,19 @@ let otherValue = 0;
 let rightNumber = 0;
 let leftNumber = 0;
 
+function isDecimal(input) {
+    countCharInString(input, '.');
+    return input.includes('.');
+}
+
+function disableDot() {
+    document.getElementById('decimal-dot').disabled = true;
+    populate('.');
+}
+
 function updateNumber(number) {
     populate(number);
+
     const operation = getOperationFromInputField();
     
     if(operation !== undefined && operation !== '-') {
@@ -18,6 +29,10 @@ function updateNumber(number) {
 }
 
 function populate(toPopulate) {
+    if(countCharInString(inputField.value, '.')>2) {
+        return
+    }
+
     if(inputField.value !== null) {
         inputField.value += toPopulate;
         return inputField;
@@ -49,6 +64,7 @@ function operate(operator) {
         calculate();
     }
     populate(operator);
+    document.getElementById('decimal-dot').disabled = false;
 }
 
 function countCharInString(string, char) {
