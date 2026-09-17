@@ -14,8 +14,6 @@ function updateNumber(number) {
         const parts = inputField.value.split(operation);
         rightNumber = parseFloat(parts[1]);
         leftNumber = parseFloat(parts[0]);
-        console.log('rightNumber: ' + rightNumber);
-        console.log('leftNumber: ' + leftNumber);
     }
 }
 
@@ -31,22 +29,18 @@ function getOperationFromInputField() {
     if (operationIndex > -1) {
         return '+';
     }
-    
     operationIndex = inputField.value.indexOf('*');
     if (operationIndex > -1) {
         return '*';
     }
-    
     operationIndex = inputField.value.indexOf('/');
     if (operationIndex > -1) {
         return '/';
     }
-    
     operationIndex = inputField.value.indexOf('-');
     if (operationIndex > -1) {
         return '-';
     }
-    
     return undefined;
 }
 
@@ -54,10 +48,6 @@ function operate(operator) {
     if(getOperationFromInputField() !== undefined) {
         calculate();
     }
-    // if(getOperationFromInputField != "") {
-    //     calculate();
-    //     populate(operator);
-    // }
     populate(operator);
 }
 
@@ -92,7 +82,7 @@ function clearCalculation() {
 }
 
 function deleteLast() {
-
+    inputField.value = inputField.value.slice(0, -1);
 }
 
 function calculate() {
@@ -137,7 +127,6 @@ function calculate() {
                 alert("Error: Invalid operation.");
                 return;
         }
-
         inputField.value = '';
         populate(result);
     }
