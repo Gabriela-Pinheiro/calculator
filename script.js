@@ -20,13 +20,10 @@ function updateNumber(number) {
 }
 
 function populate(toPopulate) {
-    // console.log('populate ' + toPopulate);
-    // if(inputField.value !== null) {
+    if(inputField.value !== null) {
         inputField.value += toPopulate;
-        console.log('new ' + inputField);
         return inputField;
-    // }
-    // inputField.value = toPopulate;
+    }
 }
 
 function getOperationFromInputField() {
@@ -55,7 +52,7 @@ function getOperationFromInputField() {
 
 function operate(operator) {
     if(getOperationFromInputField() !== undefined) {
-        // calculate();
+        calculate();
     }
     // if(getOperationFromInputField != "") {
     //     calculate();
@@ -87,11 +84,16 @@ function getIndexOfNegative() {
         return inputField.value.indexOf('-');
     }
 
-
-
     return undefined;
 }
 
+function clearCalculation() {
+    inputField.value = '';
+}
+
+function deleteLast() {
+
+}
 
 function calculate() {
 
@@ -115,20 +117,16 @@ function calculate() {
         switch (operation) {
             case '+':
                 result = num1 + num2
-                // alert(result);
                 break;
             case '-':
                 result = num1 - num2
-                // alert(result);
                 break;
             case '*':
                 result = num1 * num2;
-                // alert(result);
                 break;
             case '/':
                 if (num2 !== 0) {
                     result = num1 / num2;
-                    // alert(result);
                 } else {
                     alert("Error: Division by zero is not allowed.");
                     inputField.value = '';
