@@ -69,7 +69,6 @@ function operate(operator) {
 
 function countCharInString(string, char) {
     let countOfChar = 0;
-
     countOfChar = string.split(char).length - 1;
 
     return countOfChar;
@@ -122,17 +121,18 @@ function calculate() {
         // Perform the calculation based on the selected operation
         switch (operation) {
             case '+':
-                result = num1 + num2
+                result = (num1 + num2).toFixed(2);
                 break;
             case '-':
-                result = num1 - num2
+                result = (num1 - num2).toFixed(2)
                 break;
             case '*':
-                result = num1 * num2;
+                result = (num1 * num2).toFixed(2);
                 break;
             case '/':
                 if (num2 !== 0) {
-                    result = num1 / num2;
+                    result = (num1 / num2).toFixed(2);
+                    result;
                 } else {
                     alert("Error: Division by zero is not allowed.");
                     inputField.value = '';
