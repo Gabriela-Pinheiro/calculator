@@ -1,5 +1,6 @@
 let result;
 const inputField = document.getElementById('currentNumber');
+const negativeOperator = '-'
 let otherValue = 0;
 
 let rightNumber = 0;
@@ -55,9 +56,42 @@ function getOperationFromInputField() {
 function operate(operator) {
     if(getOperationFromInputField() !== undefined) {
         // calculate();
-    } 
+    }
+    // if(getOperationFromInputField != "") {
+    //     calculate();
+    //     populate(operator);
+    // }
     populate(operator);
 }
+
+function countCharInString(string, char) {
+    let countOfChar = 0;
+
+    countOfChar = string.split(char).length - 1;
+
+    return countOfChar;
+}
+
+function getIndexOfNegative() {
+    let count = countCharInString(inputField.value, '-')
+    
+    if(count === 1) {
+        return inputField.value.indexOf('-');
+    }
+    if(count === 3) {
+        return inputField.value.lastIndexOf('-')-1;
+    } if (count === 2) {
+        if(inputField.value.startsWith('-')) {
+            return inputField.value.lastIndexOf('-')
+        }
+        return inputField.value.indexOf('-');
+    }
+
+
+
+    return undefined;
+}
+
 
 function calculate() {
 
@@ -67,51 +101,46 @@ function calculate() {
             return
         }
 
-        const parts = inputField.value.split(operation);
+        let indexOf = inputField.value.indexOf(operation);
+        if(operation === '-') {
+            indexOf = getIndexOfNegative();
+        }
+
+        const parts = [inputField.value.slice(0, indexOf), inputField.value.slice(indexOf+1)] 
         const num1 = parseFloat(parts[0]);
         const num2 = parseFloat(parts[1]);
         let result;
 
-    // Perform the calculation based on the selected operation
-    switch (operation) {
-        case '+':
-            result = num1 + num2
-            alert(result);
-            break;
-        case '-':
-            result = num1 - num2;
-            alert(result);
-            break;
-        case '*':
-            result = num1 * num2;
-            alert(result);
-            break;
-        case '/':
-            if (num2 !== 0) {
-                result = num1 / num2;
-                alert(result);
-            } else {
-                alert("Error: Division by zero is not allowed.");
+        // Perform the calculation based on the selected operation
+        switch (operation) {
+            case '+':
+                result = num1 + num2
+                // alert(result);
+                break;
+            case '-':
+                result = num1 - num2
+                // alert(result);
+                break;
+            case '*':
+                result = num1 * num2;
+                // alert(result);
+                break;
+            case '/':
+                if (num2 !== 0) {
+                    result = num1 / num2;
+                    // alert(result);
+                } else {
+                    alert("Error: Division by zero is not allowed.");
+                    inputField.value = '';
+                    return;
+                }
+                break;
+            default:
+                alert("Error: Invalid operation.");
                 return;
-            }
-            break;
-        default:
-            alert("Error: Invalid operation.");
-            return;
+        }
+
+        inputField.value = '';
+        populate(result);
     }
-
-    inputField.value = '';
-    populate(result);
-
 }
-
-    //calculate the result
-    // document.getElementByClass('number-btn')
-    //     .onclick = () => {
-    //         populate();
-    // };
-    // // Display the result
-    //     document.getElementById('result')
-    //         .innerText =`nnnnnnnnnnnnnnnnnnnn ${result}`;
-    // console.log('result3: ' + result);
-    }
