@@ -1,4 +1,4 @@
-let result;
+
 const inputField = document.getElementById('currentNumber');
 const negativeOperator = '-'
 let otherValue = 0;
@@ -14,7 +14,6 @@ function disableDot() {
 
 function populate(toPopulate) {
     inputField.value += toPopulate;
-    // console.log(inputField.value);
     return inputField;
 
 }
@@ -32,7 +31,7 @@ function getOperationFromInputField() {
     if (operationIndex > -1) {
         return '/';
     }
-    //handle if is negativa and has 2 numbers
+
     const findOperation = inputField.value.substring(1);
     operationIndex = findOperation.indexOf('-');
     if (operationIndex > -1 && operationIndex !== findOperation.length-1) {
@@ -83,6 +82,30 @@ function deleteLast() {
     inputField.value = inputField.value.slice(0, -1);
 }
 
+function adition(num1, num2) {
+    return num1 + num2;
+}
+
+function subtraction(num1, num2) {
+    return num1 - num2;
+    
+}
+
+function division(num1, num2) {
+    if (num2 === 0) {
+        alert("Error: Division by zero is not allowed.");
+        num1 = 0;
+        num2 = 0;
+        inputField.value = '';
+        return 0;
+    }
+    return num1 / num2;
+}
+
+function multiplication(num1, num2) {
+    return num1 * num2;
+}
+
 function calculate() {
 
     if(inputField.value !== '') {
@@ -98,29 +121,24 @@ function calculate() {
 
         const parts = [inputField.value.slice(0, indexOf), inputField.value.slice(indexOf+1)] 
         const num1 = parseFloat(parts[0]);
+        if (num1 === '' || num1 === undefined) {
+            num1 = 0;
+        }
         const num2 = parseFloat(parts[1]);
         let result;
 
-        // Perform the calculation based on the selected operation
         switch (operation) {
             case '+':
-                result = num1 + num2;
+                result = adition(num1, num2);
                 break;
             case '-':
-                result = num1 - num2;
+                result = subtraction(num1, num2);
                 break;
             case '*':
-                result = num1 * num2;
+                result = multiplication(num1, num2);
                 break;
             case '/':
-                if (num2 !== 0) {
-                    result = num1 / num2;
-                    result;
-                } else {
-                    alert("Error: Division by zero is not allowed.");
-                    inputField.value = '';
-                    return;
-                }
+                result = division(num1, num2);
                 break;
             default:
                 alert("Error: Invalid operation.");
