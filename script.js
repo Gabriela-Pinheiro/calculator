@@ -15,7 +15,6 @@ function disableDot() {
 function populate(toPopulate) {
     inputField.value += toPopulate;
     return inputField;
-
 }
 
 function getOperationFromInputField() {
@@ -40,7 +39,16 @@ function getOperationFromInputField() {
     return undefined;
 }
 
+function isOperator(value) {
+    return ['+', '-', '*', '/'].includes(value);
+}
+
 function operate(operator) {
+    const lastCharacter = inputField.value.slice(-1);
+    if (isOperator(lastCharacter)) {
+        inputField.value = inputField.value.slice(0, -1) + operator;
+        return;
+    }
     if(getOperationFromInputField() !== undefined) {
         calculate();
     }
@@ -74,6 +82,8 @@ function getIndexOfNegative() {
 }
 
 function clearCalculation() {
+    num1 = 0;
+    numb2 = 0;
     inputField.value = '';
     document.getElementById('decimal-dot').disabled = false;
 }
@@ -94,10 +104,8 @@ function subtraction(num1, num2) {
 function division(num1, num2) {
     if (num2 === 0) {
         alert("Error: Division by zero is not allowed.");
-        num1 = 0;
-        num2 = 0;
-        inputField.value = '';
-        return 0;
+        clearCalculation();
+        return;
     }
     return num1 / num2;
 }
@@ -122,7 +130,7 @@ function calculate() {
         const parts = [inputField.value.slice(0, indexOf), inputField.value.slice(indexOf+1)] 
         const num1 = parseFloat(parts[0]);
         if (num1 === '' || num1 === undefined) {
-            num1 = 0;
+            num1 = parseFloat(0);
         }
         const num2 = parseFloat(parts[1]);
         let result;
