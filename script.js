@@ -1,15 +1,83 @@
-
 const inputField = document.getElementById('currentNumber');
-const negativeOperator = '-'
-let otherValue = 0;
 
-let rightNumber = 0;
-let leftNumber = 0;
+const allowedOperators = ['+', '-', '*', '/'];
 
+setupKeyboardInput();
+
+function setupKeyboardInput() {
+    document.addEventListener('keydown', handleKeyboardInput);
+}
+
+function handleKeyboardInput(e) {
+    const key = e.key;
+
+    if (key === 'Enter') {
+        e.preventDefault();
+        calculate();
+        return;
+    }
+
+    if (key === 'Backspace') {
+        e.preventDefault();
+        deleteLast();
+        return;
+    }
+
+    if (/^[0-9]$/.test(key)) {
+        e.preventDefault();
+        populate(key);
+        return;
+    }
+
+    if (allowedOperators.includes(key)) {
+        e.preventDefault();
+        operate(key);
+        return;
+    }
+
+    if (key === '.') {
+        e.preventDefault();
+
+        const currentToken = getCurrentToken();
+        if (!currentToken.includes('.')) {
+            disableDot();
+        }
+        return;
+    }
+
+    e.preventDefault();
+}
+
+function getCurrentToken() {
+    const value = inputField.value;
+    if (value === '') return '';
+
+    let opIndex = -1;
+    for (let i = 1; i < value.length; i++) {
+        const ch = value[i];
+
+        if (ch === '+' || ch === '*' || ch === '/') {
+            opIndex = i;
+        } else if (ch === '-') {
+            const prev = value[i - 1];
+            if (!isOperator(prev)) opIndex = i;
+        }
+    }
+
+    return opIndex === -1 ? value : value.slice(opIndex + 1);
+}
 
 function disableDot() {
+    const current = inputField.value;
+    const lastChar = current.slice(-1);
+
+    if (current === '' || isOperator(lastChar)) {
+        inputField.value += '0.';
+    } else {
+        inputField.value += '.';
+    }
+
     document.getElementById('decimal-dot').disabled = true;
-    populate('.');
 }
 
 function populate(toPopulate) {
@@ -18,25 +86,12 @@ function populate(toPopulate) {
 }
 
 function getOperationFromInputField() {
-    let operationIndex = inputField.value.indexOf('+');
-    if (operationIndex > -1) {
-        return '+';
-    }
-    operationIndex = inputField.value.indexOf('*');
-    if (operationIndex > -1) {
-        return '*';
-    }
-    operationIndex = inputField.value.indexOf('/');
-    if (operationIndex > -1) {
-        return '/';
-    }
+    const value = inputField.value.trim();
 
-    const findOperation = inputField.value.substring(1);
-    operationIndex = findOperation.indexOf('-');
-    if (operationIndex > -1 && operationIndex !== findOperation.length-1) {
-        return '-';
-    }
-    return undefined;
+    const match = value.match(/^(-?\d*\.?\d+)([+\-*/])(-?\d*\.?\d+)$/);
+    if (!match) return undefined;
+
+    return match[2];
 }
 
 function isOperator(value) {
@@ -44,52 +99,56 @@ function isOperator(value) {
 }
 
 function operate(operator) {
-    const lastCharacter = inputField.value.slice(-1);
-    if (isOperator(lastCharacter)) {
-        inputField.value = inputField.value.slice(0, -1) + operator;
+    let current = inputField.value;
+    const last = current.slice(-1);
+    const secondLast = current.slice(-2, -1);
+
+    if (current === '') {
+        if (operator === '-') populate('-');
         return;
     }
-    if(getOperationFromInputField() !== undefined) {
-        calculate();
+
+    if (isOperator(secondLast) && last === '-') {
+        if (operator === '-') {
+            inputField.value = current.slice(0, -2) + operator + '-';
+        } else {
+            inputField.value = current.slice(0, -2) + operator;
+        }
+        document.getElementById('decimal-dot').disabled = false;
+        return;
     }
-    populate(operator);
+
+    if (isOperator(last)) {
+        if (operator === '-' && last !== '-') {
+            inputField.value += '-';
+            return;
+        }
+
+        inputField.value = current.slice(0, -1) + operator;
+        return;
+    }
+
+    if (getOperationFromInputField() !== undefined) {
+        calculate();
+        current = inputField.value;
+    }
+
+    inputField.value = current + operator;
     document.getElementById('decimal-dot').disabled = false;
 }
 
-function countCharInString(string, char) {
-    let countOfChar = 0;
-    countOfChar = string.split(char).length - 1;
-
-    return countOfChar;
-}
-
-function getIndexOfNegative() {
-    let count = countCharInString(inputField.value, '-')
-    
-    if(count === 1) {
-        return inputField.value.indexOf('-');
-    }
-    if(count === 3) {
-        return inputField.value.lastIndexOf('-')-1;
-    } 
-    if (count === 2) {
-        if(inputField.value.startsWith('-')) {
-            return inputField.value.lastIndexOf('-')
-        }
-        return inputField.value.indexOf('-');
-    }
-    return undefined;
-}
-
 function clearCalculation() {
-    num1 = 0;
-    numb2 = 0;
     inputField.value = '';
     document.getElementById('decimal-dot').disabled = false;
 }
 
 function deleteLast() {
     inputField.value = inputField.value.slice(0, -1);
+
+    const currentToken = getCurrentToken();
+    if (!currentToken.includes('.')) {
+        document.getElementById('decimal-dot').disabled = false;
+    }
 }
 
 function adition(num1, num2) {
@@ -98,14 +157,13 @@ function adition(num1, num2) {
 
 function subtraction(num1, num2) {
     return num1 - num2;
-    
 }
 
 function division(num1, num2) {
     if (num2 === 0) {
         alert("Error: Division by zero is not allowed.");
         clearCalculation();
-        return;
+        return undefined;
     }
     return num1 / num2;
 }
@@ -115,50 +173,50 @@ function multiplication(num1, num2) {
 }
 
 function calculate() {
+    const expr = inputField.value.trim();
+    if (expr === '') return;
 
-    if(inputField.value !== '') {
-        const operation = getOperationFromInputField();
-        if (operation === undefined) {
-            return
-        }
+    const match = expr.match(/^(-?\d*\.?\d+)([+\-*/])(-?\d*\.?\d+)$/);
 
-        let indexOf = inputField.value.indexOf(operation);
-        if(operation === '-') {
-            indexOf = getIndexOfNegative();
-        }
-
-        const parts = [inputField.value.slice(0, indexOf), inputField.value.slice(indexOf+1)] 
-        const num1 = parseFloat(parts[0]);
-        if (num1 === '' || num1 === undefined) {
-            num1 = parseFloat(0);
-        }
-        const num2 = parseFloat(parts[1]);
-        let result;
-
-        switch (operation) {
-            case '+':
-                result = adition(num1, num2);
-                break;
-            case '-':
-                result = subtraction(num1, num2);
-                break;
-            case '*':
-                result = multiplication(num1, num2);
-                break;
-            case '/':
-                result = division(num1, num2);
-                break;
-            default:
-                alert("Error: Invalid operation.");
-                return;
-        }
-
-        inputField.value = '';
-
-        if(!Number.isInteger(result)){
-            result = result.toFixed(2);
-        }
-
-        populate(result);
+    if (!match) {
+        alert("Operazione non valida.");
+        return;
     }
+
+    const num1 = parseFloat(match[1]);
+    const operation = match[2];
+    const num2 = parseFloat(match[3]);
+
+    if (Number.isNaN(num1) || Number.isNaN(num2)) {
+        alert("Operazione non valida.");
+        return;
+    }
+
+    let result;
+    switch (operation) {
+        case '+':
+            result = adition(num1, num2);
+            break;
+        case '-':
+            result = subtraction(num1, num2);
+            break;
+        case '*':
+            result = multiplication(num1, num2);
+            break;
+        case '/':
+            result = division(num1, num2);
+            break;
+        default:
+            alert("Error: Invalid operation.");
+            return;
+    }
+
+    if (result === undefined || Number.isNaN(result)) return;
+
+    if (!Number.isInteger(result)) {
+        result = Number(result.toFixed(2));
+    }
+
+    inputField.value = String(result);
+    document.getElementById('decimal-dot').disabled = false;
 }
