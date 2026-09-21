@@ -11,7 +11,7 @@ function setupKeyboardInput() {
 function handleKeyboardInput(e) {
     const key = e.key;
 
-    if (key === 'Enter') {
+    if (key === 'Enter' || key === '=') {
         e.preventDefault();
         calculate();
         return;
@@ -29,7 +29,7 @@ function handleKeyboardInput(e) {
         return;
     }
 
-    if (allowedOperators.includes(key)) {
+    if (isOperator(key)) {
         e.preventDefault();
         operate(key);
         return;
@@ -179,7 +179,7 @@ function calculate() {
     const match = expr.match(/^(-?\d*\.?\d+)([+\-*/])(-?\d*\.?\d+)$/);
 
     if (!match) {
-        alert("Operazione non valida.");
+        alert("Invalid operation");
         return;
     }
 
@@ -188,7 +188,7 @@ function calculate() {
     const num2 = parseFloat(match[3]);
 
     if (Number.isNaN(num1) || Number.isNaN(num2)) {
-        alert("Operazione non valida.");
+        alert("Invalid operation");
         return;
     }
 
